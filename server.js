@@ -18,8 +18,11 @@ db.sequelize
 // Routes
 const authRoutes = require("./routes/auth");
 const statsRoutes = require("./routes/stats");
+const leaderboardRoute = require("./routes/leaderboard");
+
 app.use("/api/auth", authRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api", leaderboardRoute);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
