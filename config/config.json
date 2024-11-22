@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "toor1234",
+    "database": "keyboardmasters16",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "toor1234",
+    "database": "keyboardmasters16_test",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "toor1234",
+    "database": "keyboardmasters16_prod",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
