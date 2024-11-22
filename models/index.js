@@ -29,7 +29,8 @@ db.User = require("./user")(sequelize, Sequelize);
 db.Stats = require("./stats")(sequelize, Sequelize);
 
 // Associations
-db.User.hasOne(db.Stats, { foreignKey: "userId", as: "stats" });
-db.Stats.belongsTo(db.User, { foreignKey: "userId", as: "userStats" }); // changed alias from 'user' to 'userStats'
+// Update Associations in models/index.js
+db.User.hasMany(db.Stats, { foreignKey: "userId", as: "stats" });
+db.Stats.belongsTo(db.User, { foreignKey: "userId", as: "user" });
 
 module.exports = db;

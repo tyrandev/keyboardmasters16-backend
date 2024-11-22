@@ -34,16 +34,6 @@ router.post("/", authenticateToken, async (req, res) => {
   } = req.body;
 
   try {
-    // Check if the stats already exist for the user (optional)
-    const existingStats = await db.Stats.findOne({
-      where: { userId: req.userId },
-    });
-    if (existingStats) {
-      return res
-        .status(400)
-        .json({ message: "Stats already created for this user" });
-    }
-
     // Create new stats for the authenticated user
     const newStats = await db.Stats.create({
       cleanSpeed,
@@ -53,7 +43,7 @@ router.post("/", authenticateToken, async (req, res) => {
       incorrectWords,
       allLetters,
       incorrectLetters,
-      userId: req.userId,
+      userId: req.userId, // Use the authenticated user's ID
     });
 
     // Respond with the newly created stats
@@ -61,6 +51,27 @@ router.post("/", authenticateToken, async (req, res) => {
       message: "Stats created successfully",
       stats: newStats,
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// Fetch all stats for the authenticated user
+router.get("/", authenticateToken, async (req, res) => {
+  try {
+    // Find all stats for the authenticated user
+    const userStats = await db.Stats.findAll({
+      where: { userId: req.userId },
+    });
+
+    // Check if stats exist
+    if (!userStats || userStats.length === 0) {
+      return res.status(404).json({ message: "No stats found for this user" });
+    }
+
+    // Respond with the user's stats
+    res.status(200).json(userStats);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error", error: err.message });

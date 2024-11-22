@@ -38,11 +38,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Association: Stats belongs to one User
-  Stats.belongsTo(sequelize.models.User, {
-    foreignKey: "userId",
-    as: "user",
-  });
-
   return Stats;
 };
