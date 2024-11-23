@@ -9,7 +9,11 @@ router.get("/", async (req, res) => {
   try {
     const accuracyThreshold = 95;
 
-    // Get top 10 typists with accuracy above the threshold, sorted by best cleanSpeed (descending)
+    // Retrieve `start` and `limit` parameters from query; default to 0–10
+    const start = parseInt(req.query.start, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    // Get top typists with accuracy above the threshold, sorted by best cleanSpeed (descending)
     const leaderboard = await db.Stats.findAll({
       where: { accuracy: { [Sequelize.Op.gte]: accuracyThreshold } }, // Accuracy >= threshold
       attributes: [
@@ -37,14 +41,15 @@ router.get("/", async (req, res) => {
       ],
       group: ["userId"], // Group by userId to ensure unique users
       order: [[Sequelize.fn("MAX", Sequelize.col("cleanSpeed")), "DESC"]], // Sort by the highest cleanSpeed
-      limit: 10, // Limit to the top 10 results
+      offset: start, // Skip `start` records
+      limit, // Limit to the number of results specified
     });
 
     // If no leaderboard data found
     if (leaderboard.length === 0) {
-      return res
-        .status(404)
-        .json({ message: `No users with accuracy >= ${accuracyThreshold}%` });
+      return res.status(404).json({
+        message: `No users with accuracy >= ${accuracyThreshold}% in the specified range.`,
+      });
     }
 
     // Format the response to include stats and username
