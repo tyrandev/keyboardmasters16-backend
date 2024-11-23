@@ -4,11 +4,14 @@ const db = require("../models");
 const router = express.Router();
 
 // Route to get leaderboard
-router.get("/leaderboard", async (req, res) => {
+router.get("/", async (req, res) => {
+  // Notice '/' here, not '/leaderboard'
   try {
-    // Get top 10 typists with 100% accuracy, sorted by cleanSpeed (descending)
+    const accuracyThreshold = 95;
+
+    // Get top 10 typists with accuracy above the threshold, sorted by cleanSpeed (descending)
     const leaderboard = await db.Stats.findAll({
-      where: { accuracy: 100 }, // Only users with 100% accuracy
+      where: { accuracy: { [db.Sequelize.Op.gte]: accuracyThreshold } }, // Accuracy >= threshold
       include: [
         {
           model: db.User,
@@ -22,7 +25,9 @@ router.get("/leaderboard", async (req, res) => {
 
     // If no leaderboard data found
     if (leaderboard.length === 0) {
-      return res.status(404).json({ message: "No users with 100% accuracy" });
+      return res
+        .status(404)
+        .json({ message: `No users with accuracy >= ${accuracyThreshold}%` });
     }
 
     // Format the response to include stats and username
