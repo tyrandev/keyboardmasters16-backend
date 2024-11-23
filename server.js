@@ -22,7 +22,7 @@ const leaderboardRoute = require("./routes/leaderboard");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/stats", statsRoutes);
-app.use("/api/leaderboard", leaderboardRoute); // Changed path here
+app.use("/api/leaderboard", leaderboardRoute);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
