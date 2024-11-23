@@ -58,16 +58,28 @@ router.post("/", authenticateToken, async (req, res) => {
 });
 
 // Fetch all stats for the authenticated user
+// Fetch all stats for the authenticated user with pagination
 router.get("/", authenticateToken, async (req, res) => {
   try {
-    // Find all stats for the authenticated user
+    // Retrieve `start` and `limit` parameters from query; default to 0–10
+    const start = parseInt(req.query.start, 10) || 0;
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    // Find stats for the authenticated user with pagination
     const userStats = await db.Stats.findAll({
       where: { userId: req.userId },
+      order: [["createdAt", "DESC"]], // Sort by creation date, newest first
+      offset: start, // Skip `start` records
+      limit, // Limit the number of results
     });
 
     // Check if stats exist
     if (!userStats || userStats.length === 0) {
-      return res.status(404).json({ message: "No stats found for this user" });
+      return res
+        .status(404)
+        .json({
+          message: "No stats found for this user in the specified range",
+        });
     }
 
     // Respond with the user's stats
