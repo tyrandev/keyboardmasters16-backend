@@ -71,4 +71,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Route to get total number of leaderboard records
+router.get("/count", async (req, res) => {
+  try {
+    const accuracyThreshold = 95;
+
+    // Count the number of unique users with accuracy >= threshold
+    const count = await db.Stats.count({
+      where: { accuracy: { [Sequelize.Op.gte]: accuracyThreshold } },
+      distinct: true, // Count distinct userId
+      col: "userId", // Specify the column to count distinct values
+    });
+
+    res.status(200).json({ totalRecords: count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 module.exports = router;
