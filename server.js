@@ -1,3 +1,5 @@
+// server.js
+
 const express = require("express");
 const cors = require("cors");
 const https = require("https");
@@ -22,11 +24,11 @@ db.sequelize
   .catch((err) => console.error("Database connection failed:", err));
 
 // Routes
-const authRoutes = require("./routes/auth");
+const authRoutes = require("./routes/auth"); // Import auth routes
 const statsRoutes = require("./routes/stats");
 const leaderboardRoute = require("./routes/leaderboard");
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes); // Auth routes mapped to /api/auth
 app.use("/api/stats", statsRoutes);
 app.use("/api/leaderboard", leaderboardRoute);
 
@@ -38,9 +40,9 @@ if (isProduction) {
   const sslOptions = {
     key: fs.readFileSync(
       "/etc/letsencrypt/live/keyboardmasters.org/privkey.pem"
-    ), // Private key from Certbot
-    cert: fs.readFileSync("/etc/letsencrypt/live/keyboardmasters.org/cert.pem"), // SSL certificate from Certbot
-    ca: fs.readFileSync("/etc/letsencrypt/live/keyboardmasters.org/chain.pem"), // Certificate chain from Certbot
+    ),
+    cert: fs.readFileSync("/etc/letsencrypt/live/keyboardmasters.org/cert.pem"),
+    ca: fs.readFileSync("/etc/letsencrypt/live/keyboardmasters.org/chain.pem"),
   };
 
   // Create an HTTPS server
