@@ -1,9 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
-// Sequelize configuration for SQLite
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: process.env.DB_STORAGE || "./database.sqlite", // SQLite database file location
+  storage: process.env.DB_STORAGE || "./databases/main.sqlite",
 });
 
 // Test Connection
@@ -20,12 +19,9 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// Models
 db.User = require("./user")(sequelize, Sequelize);
 db.Stats = require("./stats")(sequelize, Sequelize);
 
-// Associations
-// Update Associations in models/index.js
 db.User.hasMany(db.Stats, { foreignKey: "userId", as: "stats" });
 db.Stats.belongsTo(db.User, { foreignKey: "userId", as: "user" });
 
