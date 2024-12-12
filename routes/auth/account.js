@@ -1,7 +1,6 @@
-// routes/auth/account.js
 const express = require("express");
 const db = require("../../models");
-const { authenticateToken } = require("./authMiddleware");
+const { authenticateToken } = require("../../middleware/auth");
 
 const router = express.Router();
 

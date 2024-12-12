@@ -6,9 +6,9 @@ const accountRoute = require("./account");
 
 const router = express.Router();
 
-router.use(registerRoute); // Register route for /register
-router.use(loginRoute); // Login route for /login
-router.use(changePasswordRoute); // Change password route for /change-password
-router.use(accountRoute); // Account route for /account
+router.use(registerRoute);
+router.use(loginRoute);
+router.use(changePasswordRoute);
+router.use(accountRoute);
 
 module.exports = router;

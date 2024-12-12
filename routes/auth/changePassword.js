@@ -2,7 +2,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const db = require("../../models");
-const { authenticateToken } = require("./authMiddleware");
+const { authenticateToken } = require("../../middleware/auth");
 
 const router = express.Router();
 
