@@ -1,15 +1,15 @@
 const express = require("express");
 const db = require("../models");
-const geoip = require("geoip-lite"); // Import geoip-lite
+const geoip = require("geoip-lite");
 const router = express.Router();
 
 // Route to log a page view
 router.post("/log-page-view", async (req, res) => {
-  const { route, timestamp } = req.body;
+  const { route } = req.body; // No need to get timestamp from frontend anymore
 
   // Validate input
-  if (!route || !timestamp) {
-    return res.status(400).json({ error: "Route and timestamp are required." });
+  if (!route) {
+    return res.status(400).json({ error: "Route is required." });
   }
 
   // Get the user's IP address
@@ -23,12 +23,12 @@ router.post("/log-page-view", async (req, res) => {
   const location = geo ? geo.country : "Unknown"; // Default to 'Unknown' if geo data is unavailable
 
   try {
-    // Create a new page view entry in the database
+    // Create a new page view entry in the database (Sequelize will handle the timestamp)
     const pageView = await db.PageView.create({
       route,
-      timestamp,
       ipAddress,
       location,
+      // Don't include timestamp here, Sequelize will automatically set the createdAt field
     });
 
     // Respond with success
