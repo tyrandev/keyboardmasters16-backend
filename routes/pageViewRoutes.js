@@ -1,24 +1,37 @@
 const express = require("express");
 const db = require("../models");
+const geoip = require("geoip-lite"); // Import geoip-lite
 const router = express.Router();
 
 // Route to log a page view
 router.post("/log-page-view", async (req, res) => {
   const { route, timestamp } = req.body;
 
-  // Validate the request body
+  // Validate input
   if (!route || !timestamp) {
     return res.status(400).json({ error: "Route and timestamp are required." });
   }
 
+  // Get the user's IP address
+  const ipAddress =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+  // Use geoip-lite to get location data based on the IP address
+  const geo = geoip.lookup(ipAddress);
+
+  // Get the location (country or city) from the geolocation data
+  const location = geo ? geo.country : "Unknown"; // Default to 'Unknown' if geo data is unavailable
+
   try {
-    // Log the page view into the database
+    // Create a new page view entry in the database
     const pageView = await db.PageView.create({
       route,
       timestamp,
+      ipAddress,
+      location,
     });
 
-    // Send a success response
+    // Respond with success
     res
       .status(200)
       .json({ message: "Page view logged successfully.", pageView });
