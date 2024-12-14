@@ -2,10 +2,9 @@ const { Sequelize, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
-  storage: process.env.DB_STORAGE || "./databases/main.sqlite",
+  storage: process.env.DB_STORAGE || "./databases/main.sqlite", // Database location
 });
 
-// Test Connection
 (async () => {
   try {
     await sequelize.authenticate();
@@ -19,9 +18,12 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+// Import Models
 db.User = require("./user")(sequelize, Sequelize);
 db.Stats = require("./stats")(sequelize, Sequelize);
+db.PageView = require("./pageView")(sequelize, Sequelize); // Add PageView model
 
+// Define relationships (if needed)
 db.User.hasMany(db.Stats, { foreignKey: "userId", as: "stats" });
 db.Stats.belongsTo(db.User, { foreignKey: "userId", as: "user" });
 

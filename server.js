@@ -1,5 +1,3 @@
-// server.js
-
 const express = require("express");
 const cors = require("cors");
 const https = require("https");
@@ -27,10 +25,12 @@ db.sequelize
 const authRoutes = require("./routes/auth"); // Import auth routes
 const statsRoutes = require("./routes/stats");
 const leaderboardRoute = require("./routes/leaderboard");
+const pageViewRoutes = require("./routes/pageViewRoutes"); // Import page view routes
 
 app.use("/api/auth", authRoutes); // Auth routes mapped to /api/auth
 app.use("/api/stats", statsRoutes);
 app.use("/api/leaderboard", leaderboardRoute);
+app.use("/api", pageViewRoutes); // Register page view routes
 
 // Start the server
 const PORT = process.env.PORT || 5000;
