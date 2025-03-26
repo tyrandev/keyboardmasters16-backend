@@ -1,6 +1,5 @@
 const express = require("express");
 const db = require("../models");
-const geoip = require("geoip-lite");
 const router = express.Router();
 
 // Route to log a page view
